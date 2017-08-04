@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>仿知乎登录页粒子动效背景</title>
+</head>
+<body style="background-color: #f7fafc">
+<canvas id="bg-canvas" style="height: 100%;width: 100%">
+
+</canvas>
+
+<script>
+    var canvas = document.getElementById("bg-canvas");
+    var context = canvas.getContext("2d");
+
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    context.fillStyle = "rgba(0, 0, 0, 0.08)";
+    context.strokeStyle = "rgba(72,209,204,1)";
+    context.lineWidth = 0.5;
+
+    var dots = [];
+    function drawDot() {
+        var _x = Math.random() * canvas.width;
+        _y = Math.random() * canvas.height;
+        _r = Math.random() * 15 + 0.01;
+        _vx = Math.random() * 0.5 * Math.pow(-1, Math.floor(Math.random() * 2 + 1));
+        _vy = Math.random() * 0.5 * Math.pow(-1, Math.floor(Math.random() * 2 + 1));
+
+        dots.push({
+            x:_x,
+            y:_y,
+            r:_r,
+            vx:_vx,
+            vy:_vy
+        })
+    }
+    var num = 20;
+    for(var i = 0; i < num; i++) {
+        drawDot();
+    }
+
+
+    function render() {
+        context.clearRect(0,0,canvas.width, canvas.height);
+        for(var j=0;j<dots.length;j++){
+            context.save();
+            context.beginPath();
+            context.arc(dots[j].x,dots[j].y,dots[j].r,0,Math.PI*2);
+            context.fill();
+            context.restore()
+        }
+        for (var m=0;m<dots.length;m++){
+            for (var k=m+1;k<dots.length;k++ ){
+                if(distance(dots[m],dots[k])<500){
+                    var lg = context.createLinearGradient(dots[m].x,dots[m].y, dots[k].x, dots[k].y); //可以尝试改变这里的参数，你可以获取更多
+                    lg.addColorStop(0, '#ff0000');
+                    lg.addColorStop(1, '#00FF00');
+                    context.strokeStyle = lg;
+                    context.beginPath();
+                    context.moveTo( dots[m].x, dots[m].y );
+                    context.lineTo( dots[k].x, dots[k].y );
+                    context.stroke();
+                }
+            }
+        }
+    }
+
+   function distance (a,b) {
+       return Math.sqrt( Math.pow( (a.x - b.x), 2 ) + Math.pow( (a.y - b.y), 2 ) );
+   }
+    setInterval(function () {
+        for (var i = 0; i < 20; i++) {
+            var cir = dots[i];
+            cir.x += cir.vx;
+            cir.y += cir.vy;
+            if (cir.x > canvas.width) cir.x = 0;
+            else if (cir.x < 0) cir.x = canvas.width;
+            if (cir.y > canvas.height) cir.y = 0;
+            else if (cir.y < 0) cir.y = canvas.height;
+
+        }
+        render();
+    }, 16);
+</script>
+
+</body>
+</html>
