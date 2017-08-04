@@ -3,8 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <title>canvas动画</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+           background-color:  #f4f5f5
+        }
+        header{
+            width: 100%;
+            margin: 0 auto;
+            height: 400px;
+            background: linear-gradient(135deg,#20A0FF,#13CE66);
+            text-align: center;
+            position: relative;
+        }
+        .title{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%,-50%);
+            -moz-transform: translate(-50%,-50%);
+            -ms-transform: translate(-50%,-50%);
+            -o-transform: translate(-50%,-50%);
+            transform: translate(-50%,-50%);
+            color: #f7fafc;
+        }
+        .content{
+            margin: 30px auto;
+            max-width: 1080px;
+            height: 100%;
+            background-color: #fff;
+            min-height: 600px;
+        }
+        ul{
+            text-align: center;
+            list-style: none;
+            padding: 50px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000;
+        }
+        ul li{
+            padding: 10px 0;
+        }
+        a:hover{
+            border-bottom:2px solid red ;
+        }
+        a{
+            text-decoration: none;
+            padding: 5px;
+            color: #20A0FF;
+        }
+    </style>
 </head>
 <body>
-    <a href="demo1/index.html">知乎登录页</a>
+<header>
+    <canvas id="bg-canvas" style="height: 100%;width: 100%">
+
+    </canvas>
+    <div class="title">
+        <h1>一些酷炫的Canvas动画</h1>
+    </div>
+</header>
+
+<div class="content">
+    <ul>
+        <li><a href="demo1/index.html">仿知乎登录页粒子动效背景</a> </li>
+        <li><a href="demo1/index.html">仿知乎登录页粒子动效背景</a> </li>
+        <li><a href="demo1/index.html">仿知乎登录页粒子动效背景</a> </li>
+        <li><a href="demo1/index.html">仿知乎登录页粒子动效背景</a> </li>
+
+    </ul>
+</div>
+<script>
+    var canvas = document.getElementById("bg-canvas");
+    var context = canvas.getContext("2d");
+
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+
+    context.fillStyle = "rgba(0, 0, 0, 0.1)";
+    context.strokeStyle = "rgba(255,255,255,1)";
+    context.lineWidth = 0.5;
+
+    var dots = [];
+    function drawDot() {
+        var _x = Math.random() * canvas.width;
+        _y = Math.random() * canvas.height;
+        _r = Math.random() * 5 + 0.01;
+        _vx = Math.random() * 0.5 * Math.pow(-1, Math.floor(Math.random() * 2 + 1));
+        _vy = Math.random() * 0.5 * Math.pow(-1, Math.floor(Math.random() * 2 + 1));
+
+        dots.push({
+            x:_x,
+            y:_y,
+            r:_r,
+            vx:_vx,
+            vy:_vy
+        })
+    }
+    var num = 30;
+    for(var i = 0; i < num; i++) {
+        drawDot();
+    }
+
+
+    function render() {
+        context.clearRect(0,0,canvas.width, canvas.height);
+        for(var j=0;j<dots.length;j++){
+            context.save();
+            context.beginPath();
+            context.arc(dots[j].x,dots[j].y,dots[j].r,0,Math.PI*2);
+            context.fill();
+            context.restore()
+        }
+        for (var m=0;m<dots.length;m++){
+            for (var k=m+1;k<dots.length;k++ ){
+                if(distance(dots[m],dots[k])<500){
+
+                    context.beginPath();
+                    context.moveTo( dots[m].x, dots[m].y );
+                    context.lineTo( dots[k].x, dots[k].y );
+                    context.stroke();
+                }
+            }
+        }
+    }
+
+    function distance (a,b) {
+        return Math.sqrt( Math.pow( (a.x - b.x), 2 ) + Math.pow( (a.y - b.y), 2 ) );
+    }
+    setInterval(function () {
+        for (var i = 0; i < 20; i++) {
+            var cir = dots[i];
+            cir.x += cir.vx;
+            cir.y += cir.vy;
+            if (cir.x > canvas.width) cir.x = 0;
+            else if (cir.x < 0) cir.x = canvas.width;
+            if (cir.y > canvas.height) cir.y = 0;
+            else if (cir.y < 0) cir.y = canvas.height;
+
+        }
+        render();
+    }, 16);
+</script>
+
 </body>
 </html>

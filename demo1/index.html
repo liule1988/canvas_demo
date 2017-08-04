@@ -17,7 +17,7 @@
     canvas.height = document.documentElement.clientHeight;
 
     context.fillStyle = "rgba(0, 0, 0, 0.08)";
-    context.strokeStyle = "rgba(72,209,204,1)";
+    context.strokeStyle = "rgba(0,0,0,0.05)";
     context.lineWidth = 0.5;
 
     var dots = [];
@@ -54,10 +54,6 @@
         for (var m=0;m<dots.length;m++){
             for (var k=m+1;k<dots.length;k++ ){
                 if(distance(dots[m],dots[k])<500){
-                    var lg = context.createLinearGradient(dots[m].x,dots[m].y, dots[k].x, dots[k].y); //可以尝试改变这里的参数，你可以获取更多
-                    lg.addColorStop(0, '#ff0000');
-                    lg.addColorStop(1, '#00FF00');
-                    context.strokeStyle = lg;
                     context.beginPath();
                     context.moveTo( dots[m].x, dots[m].y );
                     context.lineTo( dots[k].x, dots[k].y );
